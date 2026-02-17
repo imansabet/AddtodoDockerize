@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Todo CRUD</h2>
+
+<input id="title">
+<button onclick="add()">Add</button>
+
+<ul id="list"></ul>
+
+<script>
+async function load(){
+  const res = await fetch('/api/todos');
+  const data = await res.json();
+  document.getElementById('list').innerHTML =
+    data.map(x=>`<li>${x.title}</li>`).join('');
+}
+
+async function add(){
+  const title = document.getElementById('title').value;
+  await fetch('/api/todos',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({title})
+  });
+  load();
+}
+
+load();
+</script>
+
+</body>
+</html>
