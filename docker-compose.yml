@@ -8,7 +8,8 @@ services:
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - api  
+      - api
+
   api:
     build: .
     ports:
@@ -27,9 +28,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
-      # MYSQL_DATABASE: tododb
-      # MYSQL_USER: devuser
-      # MYSQL_PASSWORD: devpass
+      MYSQL_DATABASE: tododb
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpass
     ports:
       - "3306:3306"
     volumes:
@@ -40,26 +41,26 @@ services:
       timeout: 5s
       retries: 10
 
-  zabbix-server :
+  zabbix-server:
     image: zabbix/zabbix-server-mysql:latest
     environment:
-      DB_SERVER_HOST : db
-      MYSQL_USER : root
-      MYSQL_PASSWORD : rootpass
-      MYSQL_DATABASE : zabbix
+      DB_SERVER_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpass
+      MYSQL_DATABASE: zabbix
     ports:
       - "10051:10051"
     depends_on:
       - db
-    restart: unless-stopped      
+    restart: unless-stopped
 
   zabbix-web:
     image: zabbix/zabbix-web-nginx-mysql:latest
     environment:
-      DB_SERVER_HOST : db
-      MYSQL_USER : root
-      MYSQL_PASSWORD : rootpass
-      MYSQL_DATABASE : zabbix
+      DB_SERVER_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpass
+      MYSQL_DATABASE: zabbix
       ZBX_SERVER_HOST: zabbix-server
       PHP_TZ: "Asia/Tehran"
     ports:
