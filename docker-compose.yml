@@ -38,11 +38,35 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
       timeout: 5s
-      retries: 10  
+      retries: 10
 
+  zabbix-server :
+    image: zabbix/zabbix-server-mysql:latest
+    environment:
+      DB_SERVER_HOST : db
+      MYSQL_USER : devuser
+      MYSQL_PASSWORD : devpass
+      MYSQL_DATABASE : tododb
+    ports:
+      - "10051:10051"
+    depends_on:
+      - db
+    restart: unless-stopped      
 
-
-
-
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-mysql:latest
+    environment:
+      DB_SERVER_HOST : db
+      MYSQL_USER : devuser
+      MYSQL_PASSWORD : devpass
+      MYSQL_DATABASE : tododb
+      ZBX_SERVER_HOST: zabbix-server
+      PHP_TZ: "Asia/Tehran"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - zabbix-server
+    restart: unless-stopped
+    
 volumes:
   mysql_data:
